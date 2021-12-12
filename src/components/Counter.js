@@ -1,5 +1,7 @@
 import {useState} from 'react';
 import styled from "styled-components";
+import Button from './Button';
+import withMessage from '../hoc/withMessage';
 
 const Wrapper = styled.div`
   display: flex;
@@ -10,10 +12,13 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-export default function Counter({initialState}){
+function Counter({initialState,message}){
     const [state,setState] = useState(Number(initialState));
     return(<Wrapper>
+        {message()}
         <h4>{state}</h4>
-        <button onClick={()=>{setState(state + 1)}}>Click Me</button>
+        <Button title={'Click Me...'} handleClick={()=>{setState(state + 1)}}/>
     </Wrapper>);
 };
+
+export default withMessage(Counter);
