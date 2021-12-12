@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 function Counter({initialState,message}){
     const [state,setState] = useState(Number(initialState));
     return(<Wrapper>
-        {message()}
+        {message('Look before U Leap....!!!!')}
         <h4>{state}</h4>
         <Button title={'Click Me...'} handleClick={()=>{setState(state + 1)}}/>
     </Wrapper>);
