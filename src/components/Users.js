@@ -1,6 +1,6 @@
 import useFetchData from '../hooks/useFetchData';
 export default function Users() {
-    const [state] = useFetchData({ url: 'https://jsonplaceholder.typicode.com/users' });
+    const [state, loading] = useFetchData({ url: 'https://jsonplaceholder.typicode.com/users' });
     function renderList() {
         return (<>{
             state.map((user) => {
@@ -10,8 +10,6 @@ export default function Users() {
         }</>);
     };
     return (<>
-        {state.length ? (<ul>
-            {renderList()}
-        </ul>) : (<h4>Loading....</h4>)}
+        {loading ? (<h6>LOADING.....</h6>) : (<ul>{renderList()}</ul>)}
     </>);
 };
