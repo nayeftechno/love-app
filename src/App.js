@@ -1,4 +1,5 @@
+import Counter from "./components/Counter";
 function App(){
-  return(<h1>Hello , there</h1>);
+  return(<Counter initialState={10}/>);
 };
 export default App;
