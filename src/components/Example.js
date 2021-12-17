@@ -4,5 +4,6 @@ export default function Example(){
     <h1>Master</h1>
     <h1>Master</h1>
     <h1>Master</h1>
+    <h1>LOVE</h1>
     </>);
 }
