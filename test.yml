@@ -1,0 +1,10 @@
+name: Mohammad Nayef
+age: 30
+address:
+  phone: 56
+  email: m3@ww.com
+  homes:
+  - id: 10
+    loc: usa
+    sex:
+    - gender: 45
