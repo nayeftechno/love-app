@@ -14,7 +14,10 @@ class EmployeeStore {
             getTotal: computed,
             getExists: computed,
             getNotExists: computed,
-            fetch : action
+            fetch: action,
+            addEmployee: action,
+            deleteEmployee: action,
+            setChecked : action
         });
     };
     get getEmployees() {
@@ -35,12 +38,46 @@ class EmployeeStore {
     get getNotExists() {
         return this.employees.filter((emp) => { return emp.exist === false }).length;
     };
-    fetch=async()=> {
+    fetch = async () => {
         this.loading = true;
         const response = await fetch('http://localhost:4000/employees');
         const employees = await response.json();
         this.employees = employees;
         this.loading = false;
+    };
+    addEmployee = (employee) => {
+        this.adding = true;
+        fetch('http://localhost:4000/employees', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(employee)
+        }).then((response) => { return response.json() }).then((response) => {
+            this.adding = false;
+            this.employees.push(response);
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
+    deleteEmployee = (employee) => {
+        fetch(`http://localhost:4000/employees/${employee.id}`, {
+            method: 'DELETE'
+        }).then((response) => { return response.json() }).then((response) => {
+            this.employees = this.employees.filter((emp) => { return emp.id !== employee.id });
+        }).catch((error) => { console.error(error) });
+    };
+    setChecked = (employee) => {
+        const currentEmployee = this.employees.find((emp) => { return emp.id === employee.id });
+        currentEmployee.exist = !employee.exist;
+        currentEmployee.id = employee.id;
+        currentEmployee.name = employee.name;
+        fetch(`http://localhost:4000/employees/${employee.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentEmployee)
+        }).then((response) => { return response.json() }).then((response) => {
+            const index = this.employees.findIndex((emp) => { return emp.id === employee.id });
+            this.employees[index] = response;
+        }).catch((error) => { console.error(error) });
     };
 };
 export default EmployeeStore;
