@@ -1,3 +1,4 @@
+//we are using Mobx@v4 to support internet explorer, because Mobx@v5 is using Proxy API
 import { makeObservable, observable, computed, action } from 'mobx';
 class EmployeeStore {
     employees = [];
@@ -19,6 +20,7 @@ class EmployeeStore {
             deleteEmployee: action,
             setChecked : action
         });
+        this.fetch();
     };
     get getEmployees() {
         return this.employees;
