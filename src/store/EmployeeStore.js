@@ -1,14 +1,19 @@
 //we are using Mobx@v4 to support internet explorer, because Mobx@v5 is using Proxy API
-import {observable,autorun,makeAutoObservable} from "mobx";
+import { observable, autorun, makeAutoObservable, configure } from "mobx";
 import { computedFn } from "mobx-utils";
+configure({ enforceActions: "never" });
 class EmployeeStore {
   employees = [];
   loading = false;
   adding = false;
   constructor() {
-    makeAutoObservable(this,{
-      employees : observable.shallow,
-    },{autoBind : true});
+    makeAutoObservable(
+      this,
+      {
+        employees: observable.shallow,
+      },
+      { autoBind: true }
+    );
     this.fetch();
     autorun(() => {
       console.log(`From Store : ${this.employees.length}`);
@@ -42,14 +47,18 @@ class EmployeeStore {
       return emp.name.toLowerCase().includes($term);
     }).length;
   });
-  * fetch(){
-    this.loading = true;
-    const response = yield fetch("http://localhost:4000/employees");
-    const employees = yield response.json();
-    this.employees = employees;
-    this.loading = false;
-  };
-  addEmployee(employee){
+  *fetch() {
+    try {
+      this.loading = true;
+      const response = yield fetch("http://localhost:4000/employees");
+      const employees = yield response.json();
+      this.employees = employees;
+      this.loading = false;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  addEmployee(employee) {
     this.adding = true;
     fetch("http://localhost:4000/employees", {
       method: "POST",
@@ -66,8 +75,8 @@ class EmployeeStore {
       .catch((error) => {
         console.error(error);
       });
-  };
-  deleteEmployee(employee){
+  }
+  deleteEmployee(employee) {
     fetch(`http://localhost:4000/employees/${employee.id}`, {
       method: "DELETE",
     })
@@ -82,8 +91,8 @@ class EmployeeStore {
       .catch((error) => {
         console.error(error);
       });
-  };
-  setChecked(employee){
+  }
+  setChecked(employee) {
     const currentEmployee = this.employees.find((emp) => {
       return emp.id === employee.id;
     });
@@ -107,6 +116,6 @@ class EmployeeStore {
       .catch((error) => {
         console.error(error);
       });
-  };
+  }
 }
 export default EmployeeStore;
