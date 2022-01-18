@@ -1,26 +1,14 @@
 //we are using Mobx@v4 to support internet explorer, because Mobx@v5 is using Proxy API
-import { makeObservable, observable, computed, action, autorun } from "mobx";
+import {observable,autorun,makeAutoObservable} from "mobx";
 import { computedFn } from "mobx-utils";
 class EmployeeStore {
   employees = [];
   loading = false;
   adding = false;
   constructor() {
-    makeObservable(this, {
-      employees: observable,
-      loading: observable,
-      adding: observable,
-      getEmployees: computed,
-      getLoading: computed,
-      getAdding: computed,
-      getTotal: computed,
-      getExists: computed,
-      getNotExists: computed,
-      fetch: action,
-      addEmployee: action,
-      deleteEmployee: action,
-      setChecked: action,
-    });
+    makeAutoObservable(this,{
+      employees : observable.shallow,
+    },{autoBind : true});
     this.fetch();
     autorun(() => {
       console.log(`From Store : ${this.employees.length}`);
@@ -54,14 +42,14 @@ class EmployeeStore {
       return emp.name.toLowerCase().includes($term);
     }).length;
   });
-  fetch = async () => {
+  * fetch(){
     this.loading = true;
-    const response = await fetch("http://localhost:4000/employees");
-    const employees = await response.json();
+    const response = yield fetch("http://localhost:4000/employees");
+    const employees = yield response.json();
     this.employees = employees;
     this.loading = false;
   };
-  addEmployee = (employee) => {
+  addEmployee(employee){
     this.adding = true;
     fetch("http://localhost:4000/employees", {
       method: "POST",
@@ -79,7 +67,7 @@ class EmployeeStore {
         console.error(error);
       });
   };
-  deleteEmployee = (employee) => {
+  deleteEmployee(employee){
     fetch(`http://localhost:4000/employees/${employee.id}`, {
       method: "DELETE",
     })
@@ -95,7 +83,7 @@ class EmployeeStore {
         console.error(error);
       });
   };
-  setChecked = (employee) => {
+  setChecked(employee){
     const currentEmployee = this.employees.find((emp) => {
       return emp.id === employee.id;
     });
