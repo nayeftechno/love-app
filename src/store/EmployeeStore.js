@@ -1,5 +1,5 @@
 //we are using Mobx@v4 to support internet explorer, because Mobx@v5 is using Proxy API
-import { makeObservable, observable, computed, action } from 'mobx';
+import { makeObservable, observable, computed, action , autorun } from 'mobx';
 class EmployeeStore {
     employees = [];
     loading = false;
@@ -21,6 +21,9 @@ class EmployeeStore {
             setChecked : action
         });
         this.fetch();
+        autorun(()=>{
+            console.log(this.employees.length);
+        });
     };
     get getEmployees() {
         return this.employees;
