@@ -1,7 +1,17 @@
+import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { when } from 'mobx';
 import { useEmployeeStore } from '../contexts/EmployeeContext';
 function Statics() {
     const { getTotal, getExists, getNotExists } = useEmployeeStore();
+    useEffect(() => {
+        const disposer = when(() => getTotal > 5, () => {
+            console.log(`From Statics : ${getTotal}`);
+        });
+        return () => {
+            disposer();
+        }
+    }, [getTotal]);
     return (<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
         <h6>Total : {getTotal}</h6>
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
