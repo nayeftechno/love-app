@@ -5,12 +5,9 @@ import { useEmployeeStore } from '../contexts/EmployeeContext';
 function Statics() {
     const { getTotal, getExists, getNotExists } = useEmployeeStore();
     useEffect(() => {
-        const disposer = when(() => getTotal > 5, () => {
+        when(() => getTotal > 5, () => {
             console.log(`From Statics : ${getTotal}`);
         });
-        return () => {
-            disposer();
-        }
     }, [getTotal]);
     return (<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
         <h6>Total : {getTotal}</h6>
